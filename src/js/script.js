@@ -63,43 +63,49 @@ const getDataFromAPI = () => {
 
 const displayPrayerTimes = (data) => {
     const table = document.getElementById('table');
-    table.innerHTML = 
-    `<thead>
-    <tr>
-      <th class="border-b text-cyan-800 p-3">Sholat</th>
-      <th class="border-b text-cyan-800 p-3">Jam</th>
+    const dataLocal = localStorage.getItem('place');
+    const defaultPage = document.getElementById('defaultPage');
+    if(!dataLocal){
+      defaultPage.classList.remove('hidden');
+    } else {
+      table.innerHTML = 
+      `<thead>
+      <tr>
+        <th class="border-b text-cyan-800 p-3">Sholat</th>
+        <th class="border-b text-cyan-800 p-3">Jam</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center xl:text-xl xxl:text-xxl">Imsak</td>
+      <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.imsak}</td>
     </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center xl:text-xl xxl:text-xxl">Imsak</td>
-    <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.imsak}</td>
-  </tr>
-    <tr>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Shubuh</td>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.shubuh}</td>
-    </tr>
-    <tr>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Terbit</td>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.sunrise}</td>
-    </tr>
-    <tr>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Dzuhur</td>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.dzuhur}</td>
-    </tr>
-    <tr>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Ashar</td>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.ashar}</td>
-    </tr>
-    <tr>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Maghrib</td>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.maghrib}</td>
-    </tr>
-    <tr>
-      <td class="text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Isya</td>
-      <td class="text-cyan-800 font-semibold p-3 text-sm text-center">${data.isya}</td>
-    </tr>
-    </tbody>`;
+      <tr>
+        <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Shubuh</td>
+        <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.shubuh}</td>
+      </tr>
+      <tr>
+        <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Terbit</td>
+        <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.sunrise}</td>
+      </tr>
+      <tr>
+        <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Dzuhur</td>
+        <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.dzuhur}</td>
+      </tr>
+      <tr>
+        <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Ashar</td>
+        <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.ashar}</td>
+      </tr>
+      <tr>
+        <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Maghrib</td>
+        <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.maghrib}</td>
+      </tr>
+      <tr>
+        <td class="text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Isya</td>
+        <td class="text-cyan-800 font-semibold p-3 text-sm text-center">${data.isya}</td>
+      </tr>
+      </tbody>`;
+    }
 }
 
 const displayDate = () => {

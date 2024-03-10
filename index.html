@@ -17,7 +17,7 @@
                 <h1 class="text-[1.8rem] xl:text-[3rem] text-white font-bold">Jadwal Sholat</h1>
                 <h2 class="text-white xl:text-xl text-md">Setiap Provinsi Di Indonesia</h2>
                 <p id="information-date" class="text-white font-semibold"></p>
-                <select id="staticSelect" class="p-1 my-2 max-w-full text-cyan-800 font-bold rounded-lg">
+                <select id="staticSelect" class="p-2 my-2 text-[.8rem] md:text-[1rem] xl:text-[1.2rem] xxl:text-[1.5rem] max-w-full text-cyan-800 font-bold rounded-lg">
                     <option disabled id="default">--PILIH PROVINSI--</option>
                   </select>
                   <p class="text-white text-[.7rem] md:text-[1rem]">*Based on method : Kementerian Agama RI</p>
@@ -27,9 +27,15 @@
                     
                 </table>
                 <div id="loadingText" class="hidden">
-                  <div class="w-full py-20 bg-white flex flex-col items-center justify-center gap-2">
+                  <div class="max-w-full rounded-lg shadow-lg py-20 bg-white flex flex-col items-center justify-center gap-2">
                     <img src="src/img/loading-part-2-svgrepo-com.svg" alt="" width="40" class="animate-spin">
                     <p class="text-cyan-800">Loading...</p>
+                </div>
+                </div>
+                <div id="defaultPage" class="hidden ">
+                  <div class="max-w-full rounded-lg shadow-lg py-20 bg-white flex flex-col items-center justify-center gap-2">
+                    <img width="80" height="80" src="https://img.icons8.com/3d-fluency/94/up.png" alt="Up Icon" class="animate-bounce"/>
+                    <p class="text-cyan-800 text-center text-[.8rem] md:text-[1.2rem] mt-4">Data masih kosong! Pilih provinsi terlebih dahulu</p>
                 </div>
                 </div>
             </div>
@@ -37,7 +43,7 @@
     </section>
 
     <footer class="mt-36 border-t border-white">
-        <div class="container">
+        <div class="container mx-auto">
             <div class="w-full p-5 ">
                 <div class="flex items-center justify-center mb-2">
                     <!-- Instagram -->
