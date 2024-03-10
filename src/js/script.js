@@ -39,7 +39,7 @@ const getDataFromAPI = () => {
     const place = localStorage.getItem('place');
     const loadingTextElement = document.getElementById('loadingText');
     loadingTextElement.classList.remove('hidden');
-    return fetch('http://api.aladhan.com/v1/calendarByCity/' + time.year + '/' + time.month + '?city=' + place + '&country=Indonesia&method=20')
+    return fetch('https://api.aladhan.com/v1/calendarByCity/' + time.year + '/' + time.month + '?city=' + place + '&country=Indonesia&method=20')
     .then(response => response.json())
     .then(data => {
         const prayerTimes = data.data[time.day].timings;
