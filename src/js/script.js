@@ -20,7 +20,7 @@ const selectedPlace = () => {
     const selects = document.getElementById('staticSelect');
     // Menetapkan nilai awal dari localStorage saat halaman dimuat
     const initialPlace = localStorage.getItem('place');
-    selects.value = initialPlace;
+    selects.value = initialPlace || 'ACEH';
   
     // Menambahkan event listener untuk perubahan pada elemen <select>
     selects.addEventListener('change', () => {
@@ -31,6 +31,28 @@ const selectedPlace = () => {
   
       getDataFromAPI().then(data => displayPrayerTimes(data));
     });
+}
+
+const initializePage = () => {
+  const place = localStorage.getItem('place');
+  if (place) {
+      getDataFromAPI().then(data => {
+          if (data) {
+              displayPrayerTimes(data);
+              displayDate();
+          }
+      });
+  } else {
+      // Jika localStorage kosong, set ke nilai default dan panggil API
+      localStorage.setItem('place', 'ACEH');
+      selectedPlace(); // Set place yang dipilih dari default
+      getDataFromAPI().then(data => {
+          if (data) {
+              displayPrayerTimes(data);
+              displayDate();
+          }
+      });
+  }
 }
 
 const getDataFromAPI = () => {
@@ -125,16 +147,9 @@ const displayDate = () => {
     informationDate.textContent = `${dayName}, ${dataTimes.day} ${monthName} ${dataTimes.year}`;
 }
 // Panggil fungsi-fungsi utama
+initializePage();
 placeTimes();
 selectedPlace();
-getDataFromAPI()
-  .then(data => {
-      if (data) {
-          displayPrayerTimes(data);
-          displayDate();
-      }
-  });
-
 
 
 
