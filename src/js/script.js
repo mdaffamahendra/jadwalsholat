@@ -29,31 +29,10 @@ const selectedPlace = () => {
       // Mengubah nilai di localStorage saat ada perubahan
       localStorage.setItem('place', selected);
   
-      getDataFromAPI().then(data => displayPrayerTimes(data));
+      location.reload(true);
     });
 }
 
-const initializePage = () => {
-  const place = localStorage.getItem('place');
-  if (place) {
-      getDataFromAPI().then(data => {
-          if (data) {
-              displayPrayerTimes(data);
-              displayDate();
-          }
-      });
-  } else {
-      // Jika localStorage kosong, set ke nilai default dan panggil API
-      localStorage.setItem('place', 'ACEH');
-      selectedPlace(); // Set place yang dipilih dari default
-      getDataFromAPI().then(data => {
-          if (data) {
-              displayPrayerTimes(data);
-              displayDate();
-          }
-      });
-  }
-}
 
 const getDataFromAPI = () => {
   const time = getTimes();
@@ -77,13 +56,12 @@ const getDataFromAPI = () => {
           };
           loadingTextElement.classList.add('hidden');
           return prayerData;
-      } else {
+        } else {
           throw new Error('Data untuk hari ini tidak tersedia');
       }
   })
   .catch(err => {
       console.error(err.message || err);
-      loadingTextElement.classList.add('hidden');
   });
 }
 
@@ -147,9 +125,15 @@ const displayDate = () => {
     informationDate.textContent = `${dayName}, ${dataTimes.day} ${monthName} ${dataTimes.year}`;
 }
 // Panggil fungsi-fungsi utama
-initializePage();
 placeTimes();
 selectedPlace();
+getDataFromAPI().then(data => {
+  if (data) {
+      displayPrayerTimes(data);
+      displayDate();
+  }
+});
+
 
 
 
