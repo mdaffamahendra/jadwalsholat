@@ -29,83 +29,90 @@ const selectedPlace = () => {
       // Mengubah nilai di localStorage saat ada perubahan
       localStorage.setItem('place', selected);
   
-      // Memperbarui tampilan pada halaman
-      location.reload(true);
+      getDataFromAPI().then(data => displayPrayerTimes(data));
     });
 }
 
 const getDataFromAPI = () => {
-    const time = getTimes();
-    const place = localStorage.getItem('place');
-    const loadingTextElement = document.getElementById('loadingText');
-    loadingTextElement.classList.remove('hidden');
-    return fetch('https://api.aladhan.com/v1/calendarByCity/' + time.year + '/' + time.month + '?city=' + place + '&country=Indonesia&method=20')
-    .then(response => response.json())
-    .then(data => {
-        const prayerTimes = data.data[time.day].timings;
-        const prayerData = {
-            shubuh: prayerTimes.Fajr,
-            imsak: prayerTimes.Imsak,
-            sunrise: prayerTimes.Sunrise,
-            dzuhur: prayerTimes.Dhuhr,
-            ashar: prayerTimes.Asr,
-            maghrib: prayerTimes.Maghrib,
-            isya: prayerTimes.Isha,
-        }
-        loadingTextElement.classList.add('hidden');
-        return prayerData;
-    })
-    .catch(err => {
-      console.error(err);
+  const time = getTimes();
+  const place = localStorage.getItem('place') || 'ACEH'; // Default ke ACEH jika place tidak tersedia
+  const loadingTextElement = document.getElementById('loadingText');
+  loadingTextElement.classList.remove('hidden');
+  
+  return fetch(`https://api.aladhan.com/v1/calendarByCity/${time.year}/${time.month}?city=${place}&country=Indonesia&method=20`)
+  .then(response => response.json())
+  .then(data => {
+      if (data && data.data && data.data[time.day - 1]) {
+          const prayerTimes = data.data[time.day - 1].timings;
+          const prayerData = {
+              shubuh: prayerTimes.Fajr,
+              imsak: prayerTimes.Imsak,
+              sunrise: prayerTimes.Sunrise,
+              dzuhur: prayerTimes.Dhuhr,
+              ashar: prayerTimes.Asr,
+              maghrib: prayerTimes.Maghrib,
+              isya: prayerTimes.Isha,
+          };
+          loadingTextElement.classList.add('hidden');
+          return prayerData;
+      } else {
+          throw new Error('Data untuk hari ini tidak tersedia');
+      }
+  })
+  .catch(err => {
+      console.error(err.message || err);
       loadingTextElement.classList.add('hidden');
-    });
+  });
 }
 
 const displayPrayerTimes = (data) => {
-    const table = document.getElementById('table');
-    const dataLocal = localStorage.getItem('place');
-    const defaultPage = document.getElementById('defaultPage');
-    if(!dataLocal){
+  const table = document.getElementById('table');
+  const dataLocal = localStorage.getItem('place');
+  const defaultPage = document.getElementById('defaultPage');
+  
+  if (!dataLocal) {
       defaultPage.classList.remove('hidden');
-    } else {
-      table.innerHTML = 
-      `<thead>
-      <tr>
-        <th class="border-b text-cyan-800 p-3">Sholat</th>
-        <th class="border-b text-cyan-800 p-3">Jam</th>
-      </tr>
+  } else if (data) {
+      table.innerHTML = `
+      <thead>
+          <tr>
+              <th class="border-b text-cyan-800 p-3">Sholat</th>
+              <th class="border-b text-cyan-800 p-3">Jam</th>
+          </tr>
       </thead>
       <tbody>
-      <tr>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center xl:text-xl xxl:text-xxl">Imsak</td>
-      <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.imsak}</td>
-    </tr>
-      <tr>
-        <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Shubuh</td>
-        <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.shubuh}</td>
-      </tr>
-      <tr>
-        <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Terbit</td>
-        <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.sunrise}</td>
-      </tr>
-      <tr>
-        <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Dzuhur</td>
-        <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.dzuhur}</td>
-      </tr>
-      <tr>
-        <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Ashar</td>
-        <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.ashar}</td>
-      </tr>
-      <tr>
-        <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Maghrib</td>
-        <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.maghrib}</td>
-      </tr>
-      <tr>
-        <td class="text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Isya</td>
-        <td class="text-cyan-800 font-semibold p-3 text-sm text-center">${data.isya}</td>
-      </tr>
+          <tr>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center xl:text-xl xxl:text-xxl">Imsak</td>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.imsak || '-'}</td>
+          </tr>
+          <tr>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Shubuh</td>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.shubuh || '-'}</td>
+          </tr>
+          <tr>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Terbit</td>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.sunrise || '-'}</td>
+          </tr>
+          <tr>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Dzuhur</td>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.dzuhur || '-'}</td>
+          </tr>
+          <tr>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Ashar</td>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.ashar || '-'}</td>
+          </tr>
+          <tr>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Maghrib</td>
+              <td class="border-b text-cyan-800 font-semibold p-3 text-sm text-center">${data.maghrib || '-'}</td>
+          </tr>
+          <tr>
+              <td class="text-cyan-800 font-semibold p-3 text-sm xl:text-xl xxl:text-xxl text-center">Isya</td>
+              <td class="text-cyan-800 font-semibold p-3 text-sm text-center">${data.isya || '-'}</td>
+          </tr>
       </tbody>`;
-    }
+  } else {
+      table.innerHTML = `<p class="text-red-500">Jadwal sholat tidak tersedia untuk hari ini.</p>`;
+  }
 }
 
 const displayDate = () => {
@@ -117,14 +124,17 @@ const displayDate = () => {
 
     informationDate.textContent = `${dayName}, ${dataTimes.day} ${monthName} ${dataTimes.year}`;
 }
-
+// Panggil fungsi-fungsi utama
+placeTimes();
+selectedPlace();
 getDataFromAPI()
-.then(data => {
-    displayPrayerTimes(data);
-    displayDate();
-    placeTimes();
-    selectedPlace();
-})
+  .then(data => {
+      if (data) {
+          displayPrayerTimes(data);
+          displayDate();
+      }
+  });
+
 
 
 
